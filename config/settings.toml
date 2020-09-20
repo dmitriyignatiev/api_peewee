@@ -1,0 +1,7 @@
+[default]
+AIO_PORT = 8083
+DB_USER='postgres'
+DB_PASSWORD='postgres'
+DB_HOST='localhost'
+DB_PORT=50012
+DB_NAME='sales'
