@@ -39,9 +39,35 @@ class TestModel(peewee.Model):
     class Meta:
         database = database
 
-TestModel.create_table(True)
-TestModel.create(text="Yo, I can do it sync!")
+
+class Author(peewee.Model):
+    name = peewee.CharField()
+    rating=peewee.IntegerField(default=1)
+
+    class Meta:
+        database = database
+
+class Book(peewee.Model):
+    name =peewee.CharField()
+    year = peewee.IntegerField()
+    author = peewee.ForeignKeyField(Author)
+
+    class Meta:
+        database = database
+
+
+
+
+# Author.create_table(True)
+# Book.create_table(True)
+
+# Author.create(name="First_author")
+# Book.create(name='Firsr_book', year=1995)
+
+
 database.close()
+
+objects = peewee_async.Manager(database)
 
 async def init_pg(app):
     engine = await aiopg.sa.create_engine(
@@ -51,13 +77,14 @@ async def init_pg(app):
         host=settings['DB_HOST'],
         port=settings['DB_PORT'],
     )
-
     database.init(**DATABASE)
     app.database = database
     app.objects = peewee_async.Manager(app.database)
     app['db'] = engine
 
 
+
 async def close_pg(app):
     app['db'].close()
+    database.close()
     await app['db'].wait_closed()

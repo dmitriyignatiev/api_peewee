@@ -21,9 +21,6 @@ async def init_app():
     app.on_startup.append(init_pg)
     app.on_cleanup.append(close_pg)
 
-
-
-
     return app
 
 app = init_app()
